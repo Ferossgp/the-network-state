@@ -7,8 +7,8 @@ import Animated, {
   useScrollViewOffset,
 } from 'react-native-reanimated';
 
-import { ThemedView } from '@/components/ThemedView';
 import { useBottomTabOverflow } from '@/components/ui/TabBarBackground';
+import { Box } from './ui/box';
 
 const HEADER_HEIGHT = 250;
 
@@ -44,7 +44,7 @@ export default function ParallaxScrollView({
   });
 
   return (
-    <ThemedView style={styles.container}>
+    <Box style={styles.container}>
       <Animated.ScrollView
         ref={scrollRef}
         scrollEventThrottle={16}
@@ -58,9 +58,9 @@ export default function ParallaxScrollView({
           ]}>
           {headerImage}
         </Animated.View>
-        <ThemedView style={styles.content}>{children}</ThemedView>
+        <Box style={styles.content}>{children}</Box>
       </Animated.ScrollView>
-    </ThemedView>
+    </Box>
   );
 }
 
