@@ -1,4 +1,4 @@
-import { Tabs } from 'expo-router';
+import { Redirect, Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 
@@ -7,9 +7,24 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useLiveQuery } from 'drizzle-orm/expo-sqlite';
+import { db } from '@/db/drizzle';
+import { ownerTable } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+
+  const { data } = useLiveQuery(
+    db.select().from(ownerTable).where(eq(ownerTable.id, 'owner'))
+  )
+
+  console.log(data)
+
+  const owner = data?.[0];
+  if (owner == null) {
+    return <Redirect href="/onboarding" />
+  }
 
   return (
     <Tabs
