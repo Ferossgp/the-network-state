@@ -9,6 +9,7 @@ import theme from '@/theme';
 import { ThemeProvider } from '@shopify/restyle';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useMigrationHelper } from '@/db/drizzle';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -33,14 +34,16 @@ export default function RootLayoutNav() {
   return (
     <GestureHandlerRootView>
       <ThemeProvider theme={theme}>
-        <NavigationThemeProvider value={DarkTheme}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="onboarding" options={{ headerShown: false, animation: 'fade' }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <StatusBar style="auto" />
-        </NavigationThemeProvider>
+        <BottomSheetModalProvider>
+          <NavigationThemeProvider value={DarkTheme}>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="onboarding" options={{ headerShown: false, animation: 'fade' }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+            <StatusBar style="auto" />
+          </NavigationThemeProvider>
+        </BottomSheetModalProvider>
       </ThemeProvider>
     </GestureHandlerRootView>
   );

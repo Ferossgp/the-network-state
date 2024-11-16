@@ -164,7 +164,7 @@ export default function Onboarding() {
                 Build relationships that matter.
               </Text>
               <Text variant="body" textAlign="center">
-                First value proposition
+                Transform your networking experience with real-time AI assistance that remembers key details. suggests personalized follow-ups, and ensures you never lose track of important connections.
               </Text>
             </Box>
           </Box>
@@ -172,7 +172,7 @@ export default function Onboarding() {
         <Slide
           layout="linear"
           expanded={activeIndex === 1}
-          title="Offline First"
+          title="Privacy First"
           onPress={() => setActiveIndex(1)}
         >
           <Box alignItems="center" justifyContent="center" flex={1} paddingHorizontal={4} gap={6}>
@@ -188,7 +188,7 @@ export default function Onboarding() {
                 You own your data.
               </Text>
               <Text variant="body" textAlign="center">
-                Second value proposition
+                Private conversation are the most sacred, thus we ensure that your data is never shared with third parties.
               </Text>
             </Box>
           </Box>

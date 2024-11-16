@@ -54,8 +54,6 @@ interface BaseButtonProps extends ButtonStyleProps, PressableProps {
   loading?: boolean
   disabled?: boolean
   flex?: number
-  floating?: boolean
-  blur?: boolean
 }
 
 const ButtonVariant = createVariant({
@@ -127,14 +125,11 @@ export const Button: React.FC<React.PropsWithChildren<BaseButtonProps>> = ({
   loading = false,
   children,
   disabled,
-  blur = false,
-  floating,
   ...rest
 }) => {
   const { textStyle, buttonStyle } = useButtonStyles({
     variant,
     ...rest,
-    blur,
   })
   return (
     <Pressable

@@ -10,32 +10,28 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { ownerTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { useLiveQuery } from '@/db/use-live-query';
+import { TabBar } from '@/components/tab-bar';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
-  const { data } = useLiveQuery((db) =>
-    db.select().from(ownerTable).where(eq(ownerTable.id, 'owner'))
+  const { data, status } = useLiveQuery((db) =>
+    db.query.ownerTable.findFirst({
+      where: eq(ownerTable.id, 'owner'),
+    })
   );
 
-  if (data != null && data[0] == null) {
+  if (status === 'pending') {
+    return null;
+  }
+
+  if (data == null) {
     return <Redirect href="/onboarding" />
   }
 
   return (
     <Tabs
+      tabBar={(props) => <TabBar {...props} />}
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
       }}>
       <Tabs.Screen
         name="index"

@@ -67,6 +67,10 @@ const theme = createTheme({
     'border-light': colorsLight.muted,
     'border-dark': colorsDark.muted,
 
+    'tab-bar-background': '#fff',
+    'tab-bar-button-active': colorsLight.primaryForeground,
+    'tab-bar-button-inactive': 'transparent',
+
     'onboarding-input': 'rgba(0, 0, 0, 0.1)',
   },
   spacing: {
@@ -124,6 +128,24 @@ const theme = createTheme({
       backgroundColor: 'primary',
       borderRadius: 'lg',
       color: 'primary-foreground',
+    },
+    icon: {
+      paddingHorizontal: 0,
+      width: buttonSize.large,
+      height: buttonSize.large,
+      backgroundColor: 'primary',
+      borderRadius: 'full',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    'back-icon': {
+      paddingHorizontal: 0,
+      width: buttonSize.large,
+      height: buttonSize.large,
+      backgroundColor: 'tab-bar-background',
+      borderRadius: 'full',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   },
   textVariants: {
