@@ -51,6 +51,9 @@ const theme = createTheme({
     'muted-dark': colorsDark.muted,
     'muted-light': colorsLight.muted,
 
+    'foreground-secondary-light': colorsLight.secondary,
+    'foreground-secondary-dark': colorsLight.secondary,
+
     'surface-light': '#FFFFFF',
 
     card: colorsLight.card,

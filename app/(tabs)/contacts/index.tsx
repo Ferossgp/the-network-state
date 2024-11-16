@@ -36,7 +36,7 @@ export default function HomeScreen() {
     <Box flex={1}>
       <Box height={insets.top} />
       <Box paddingHorizontal={2} gap={2} flexDirection="row" alignItems="center">
-        <Text variant="title" color="foreground-dark">Network 📒</Text>
+        <Text variant="header" color="foreground-dark">Interactions 📒</Text>
       </Box>
       <Box flex={1} padding={3}>
         <AnimatedFlatList

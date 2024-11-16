@@ -22,6 +22,27 @@
       "when": 1731740868195,
       "tag": "0002_premium_talon",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1731762619450,
+      "tag": "0003_tired_proteus",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1731767233556,
+      "tag": "0004_plain_quasimodo",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1731767592607,
+      "tag": "0005_nostalgic_changeling",
+      "breakpoints": true
     }
   ]
 }

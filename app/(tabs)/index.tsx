@@ -12,8 +12,9 @@ import { HomeListItem } from '@/components/home-screen/home-screen-card';
 import { TAB_BAR_HEIGHT } from '@/components/tab-bar';
 import { useLiveQuery } from '@/db/use-live-query';
 import { db } from '@/db/drizzle';
-import { recordingsTable } from '@/db/schema';
+import { contactTable, recordingsTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { stringToHslColor } from '@/lib/colors';
 
 export default function TabTwoScreen() {
   const insets = useSafeAreaInsets();
@@ -27,7 +28,7 @@ export default function TabTwoScreen() {
     <Box flex={1}>
       <Box height={insets.top} />
       <Box paddingHorizontal={2} gap={2} flexDirection="row" alignItems="center">
-        <Text variant="title" color="foreground-dark">Welcome!</Text>
+        <Text variant="header" color="foreground-dark">Welcome!</Text>
         <HelloWave />
       </Box>
       <Box flex={1} paddingHorizontal={3}>
@@ -48,16 +49,16 @@ export default function TabTwoScreen() {
                 await db.delete(recordingsTable).where(
                   eq(recordingsTable.id, recording.id),
                 ).execute()
-                // await db
-                //   .insert(contactTable)
-                //   .values({
-                //     name: 'New Contact',
-                //     color: stringToHslColor('New Contact'),
-                //     description: 'AI description',
-                //     headline: 'Super headline',
-                //   })
-                //   .execute()
-                //   .catch(console.error)
+                await db
+                  .insert(contactTable)
+                  .values({
+                    name: recording.name,
+                    color: stringToHslColor(recording.name),
+                    description: recording.description,
+                    headline: recording.raw?.headline,
+                    raw: recording.raw,
+                  })
+                  .execute()
               }}
             />
           ))}

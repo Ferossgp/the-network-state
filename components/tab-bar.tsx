@@ -1,8 +1,8 @@
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import type React from 'react'
 import { router } from 'expo-router'
-import { Pressable } from 'react-native'
-import { FadeIn, FadeInRight, FadeOutRight } from 'react-native-reanimated'
+import { ActivityIndicator, Pressable } from 'react-native'
+import { FadeIn, FadeInRight, FadeOutRight, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated'
 import { buttonSize } from '@/theme'
 import { Button } from './ui/button'
 import { AnimatedBox, Box } from './ui/box'
@@ -11,9 +11,11 @@ import { Surface } from './ui/surface'
 import { BottomSheet, BottomSheetContent, BottomSheetTrigger } from './ui/bottom-sheet'
 import { BottomSheetView } from '@gorhom/bottom-sheet'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Text } from './ui/text'
 import Recorder from './recorder'
+import { syncServerRecordings } from '@/lib/api'
+import { useTheme } from '@shopify/restyle'
 
 const HIT_SLOP = 10
 export const TAB_BAR_HEIGHT = buttonSize.large + 4 + 4
@@ -48,10 +50,29 @@ const AddContact = () => {
   )
 }
 
+const SyncButton = () => {
+  const { colors } = useTheme()
+  const [loading, setLoading] = useState(false)
+
+  const onPress = async () => {
+    setLoading(true)
+    await syncServerRecordings().finally(() => setLoading(false))
+  }
+
+  return (
+    <Button variant="icon" hitSlop={HIT_SLOP} onPress={onPress} loading={loading}>
+      {loading ? (
+        <ActivityIndicator size="small" color={colors['primary-foreground']} />
+      ) :
+        <Icon size={24} name="reload-outline" color="primary-foreground" />}
+    </Button>
+  )
+}
+
 export const BackButton = () => {
   return (
     <AnimatedBox entering={FadeInRight} exiting={FadeOutRight}>
-      <Button variant="back-icon" floating blur onPress={router.back} hitSlop={HIT_SLOP}>
+      <Button variant="back-icon" onPress={router.back} hitSlop={HIT_SLOP}>
         <Icon size={24} name="arrow-back-outline" color="tab-bar-button-active" />
       </Button>
     </AnimatedBox>
@@ -77,7 +98,7 @@ export const TabBar: React.FC<BottomTabBarProps> = ({ navigation, state, insets 
         <Box flexDirection="row" flex={1} pointerEvents="box-none" alignItems="center">
           {canGoBack ? <BackButton /> : null}
           <Box flex={1} pointerEvents="box-none" />
-          <AddContact />
+          <SyncButton />
         </Box>
         <Box
           position="absolute"

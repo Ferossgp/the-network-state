@@ -1,4 +1,11 @@
-import { interpolate, runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import {
+  interpolate,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 import { AnimatedBox, Box } from "../ui/box";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { Text } from "../ui/text";
@@ -13,62 +20,75 @@ export const HomeListItem = ({
   onLeft,
   onRight,
 }: {
-  index: number; total: number
-  title: string
-  description: string
-  onLeft: () => void
-  onRight: () => void
+  index: number;
+  total: number;
+  title: string;
+  description: string;
+  onLeft: () => void;
+  onRight: () => void;
 }) => {
-  const translateX = useSharedValue(0)
-  const translateY = useSharedValue(0)
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
   const gestureHandler = Gesture.Pan()
     .onChange((event) => {
-      translateX.value = event.translationX * 0.8
-      translateY.value = event.translationY * 0.2
+      translateX.value = event.translationX * 0.8;
+      translateY.value = event.translationY * 0.2;
     })
     .onEnd((event) => {
-      const shouldDismiss = Math.abs(event.velocityX) > 500
+      const shouldDismiss = Math.abs(event.velocityX) > 500;
 
       const springConfig = {
         mass: 3,
         stiffness: 100,
         damping: 30,
-      }
+      };
       if (shouldDismiss) {
-        translateX.value = withTiming(event.velocityX > 0 ? 500 : -500, {
-          duration: 500,
-        }, () => {
-          if (event.velocityX < 0) {
-            runOnJS(onLeft)()
-          } else {
-            runOnJS(onRight)()
+        translateX.value = withTiming(
+          event.velocityX > 0 ? 500 : -500,
+          {
+            duration: 500,
+          },
+          () => {
+            if (event.velocityX < 0) {
+              runOnJS(onLeft)();
+            } else {
+              runOnJS(onRight)();
+            }
           }
-        })
+        );
       } else {
-        translateX.value = withSpring(0, springConfig)
-        translateY.value = withSpring(0, springConfig)
+        translateX.value = withSpring(0, springConfig);
+        translateY.value = withSpring(0, springConfig);
       }
-    })
+    });
 
   const onPressRight = () => {
-    translateX.value = withTiming(500, {
-      duration: 500,
-    }, () => {
-      runOnJS(onRight)()
-    })
-  }
+    setTimeout(() => {
+      onRight();
+    }, 250);
+    translateX.value = withTiming(
+      500,
+      {
+        duration: 500,
+      }
+    );
+  };
 
   const onPressLeft = () => {
-    translateX.value = withTiming(-500, {
-      duration: 500,
-    }, () => {
-      runOnJS(onLeft)()
-    })
-  }
+    setTimeout(() => {
+      onLeft();
+    }, 250);
+    translateX.value = withTiming(
+      -500,
+      {
+        duration: 500,
+      }
+    );
+  };
 
   const style = useAnimatedStyle(() => {
     return {
-      position: 'absolute',
+      position: "absolute",
       bottom: 0,
       top: 0,
       left: 0,
@@ -80,14 +100,26 @@ export const HomeListItem = ({
           scale: withSpring(index === total - 1 ? 1 : 0.95),
         },
         {
-          rotate: withSpring(index === total - 1 ? '0rad' : index % 2 === 0 ? '0.2rad' : '-0.2rad'),
+          rotate: withSpring(
+            index === total - 1
+              ? "0rad"
+              : index % 2 === 0
+                ? "0.2rad"
+                : "-0.2rad"
+          ),
         },
         { translateX: translateX.value },
         { translateY: translateY.value },
-        { rotate: `${interpolate(translateX.value, [-500, 0, 500], [-30, 0, -30])}deg` },
+        {
+          rotate: `${interpolate(
+            translateX.value,
+            [-500, 0, 500],
+            [-30, 0, -30]
+          )}deg`,
+        },
       ],
-    }
-  })
+    };
+  });
 
   return (
     <GestureDetector gesture={gestureHandler}>
@@ -106,7 +138,7 @@ export const HomeListItem = ({
           gap={3}
           padding={4}
           style={{
-            borderCurve: 'continuous',
+            borderCurve: "continuous",
           }}
         >
           <Box gap={4}>
@@ -126,7 +158,7 @@ export const HomeListItem = ({
                   Nov
                 </Text>
               </Box>
-              <Text variant="title">{title}</Text>
+              <Text variant="h3">{title}</Text>
             </Box>
             <Text variant="large" color="foreground-light">
               {description}
@@ -134,39 +166,33 @@ export const HomeListItem = ({
             <Box flexDirection="row" gap={3}>
               <Button
                 variant="card-action"
-                backgroundColor='destructive'
+                backgroundColor="destructive"
                 onPress={onPressLeft}
               >
                 <Box flexDirection="row" gap={2} alignItems="center">
-                  <Text
-                    fontWeight={500}
-                    color={'destructive-foreground'}
-                  >
+                  <Text fontWeight={500} color={"destructive-foreground"}>
                     Delete
                   </Text>
                   <Icon
-                    name='close'
+                    name="close"
                     size={20}
-                    color={'destructive-foreground'}
+                    color={"destructive-foreground"}
                   />
                 </Box>
               </Button>
               <Button
                 variant="card-action"
-                backgroundColor='primary'
+                backgroundColor="primary"
                 onPress={onPressRight}
               >
                 <Box flexDirection="row" gap={2} alignItems="center">
-                  <Text
-                    fontWeight={500}
-                    color={'primary-foreground'}
-                  >
+                  <Text fontWeight={500} color={"primary-foreground"}>
                     Store
                   </Text>
                   <Icon
-                    name='checkmark-outline'
+                    name="checkmark-outline"
                     size={20}
-                    color={'primary-foreground'}
+                    color={"primary-foreground"}
                   />
                 </Box>
               </Button>
@@ -175,5 +201,5 @@ export const HomeListItem = ({
         </Box>
       </AnimatedBox>
     </GestureDetector>
-  )
-}
+  );
+};

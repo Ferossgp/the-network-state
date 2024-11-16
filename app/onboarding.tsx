@@ -1,14 +1,14 @@
-import { AnimatedBox, Box } from '@/components/ui/box'
-import { Image } from 'expo-image'
-import { router } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
-import { useCallback, useEffect, useState } from 'react'
+import { AnimatedBox, Box } from "@/components/ui/box";
+import { Image } from "expo-image";
+import { router } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useCallback, useEffect, useState } from "react";
 import {
   Gesture,
   GestureDetector,
   PanGestureHandlerEventPayload,
   type GestureStateChangeEvent,
-} from 'react-native-gesture-handler'
+} from "react-native-gesture-handler";
 import {
   CurvedTransition,
   FadeIn,
@@ -18,48 +18,50 @@ import {
   useAnimatedKeyboard,
   useAnimatedStyle,
   withTiming,
-} from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Text } from '@/components/ui/text'
-import { ownerTable } from '@/db/schema'
-import { Input } from '@/components/ui/input'
-import { db } from '@/db/drizzle'
-import { Button } from '@/components/ui/button'
+} from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Text } from "@/components/ui/text";
+import { ownerTable } from "@/db/schema";
+import { Input } from "@/components/ui/input";
+import { db } from "@/db/drizzle";
+import { Button } from "@/components/ui/button";
 
 const Slide: React.FC<
   React.PropsWithChildren<{
-    expanded: boolean
-    paddingTop?: number
-    title: string
-    onPress: () => void
-    layout?: 'linear' | 'none'
+    expanded: boolean;
+    paddingTop?: number;
+    title: string;
+    onPress: () => void;
+    layout?: "linear" | "none";
   }>
-> = ({ expanded, title, children, paddingTop, layout = 'none', onPress }) => {
+> = ({ expanded, title, children, paddingTop, layout = "none", onPress }) => {
   const headerStyle = useAnimatedStyle(() => {
     return {
       opacity: expanded ? withTiming(1) : withTiming(0.5),
-    }
-  })
+    };
+  });
 
   const tapGesture = Gesture.Tap().onEnd(() => {
-    runOnJS(onPress)()
-  })
+    runOnJS(onPress)();
+  });
 
-  const [disableTransition, setDisableTransition] = useState(false)
+  const [disableTransition, setDisableTransition] = useState(false);
 
   useEffect(() => {
-    if (layout === 'none' && !expanded) setDisableTransition(false)
-  }, [expanded])
+    if (layout === "none" && !expanded) setDisableTransition(false);
+  }, [expanded]);
 
   const onEnd = useCallback(
     (finished: boolean) => {
-      'worklet'
-      if (finished && layout === 'none') runOnJS(setDisableTransition)(true)
+      "worklet";
+      if (finished && layout === "none") runOnJS(setDisableTransition)(true);
     },
-    [layout],
-  )
+    [layout]
+  );
 
-  const _layout = !disableTransition ? LinearTransition.withCallback(onEnd) : undefined
+  const _layout = !disableTransition
+    ? LinearTransition.withCallback(onEnd)
+    : undefined;
 
   return (
     <GestureDetector gesture={tapGesture}>
@@ -73,8 +75,12 @@ const Slide: React.FC<
           paddingTop: paddingTop,
         }}
       >
-        <Box alignItems={expanded ? 'center' : 'flex-start'}>
-          <AnimatedBox padding={4} style={headerStyle} layout={CurvedTransition}>
+        <Box alignItems={expanded ? "center" : "flex-start"}>
+          <AnimatedBox
+            padding={4}
+            style={headerStyle}
+            layout={CurvedTransition}
+          >
             <Text variant="title">{title}</Text>
           </AnimatedBox>
         </Box>
@@ -85,50 +91,55 @@ const Slide: React.FC<
         ) : null}
       </AnimatedBox>
     </GestureDetector>
-  )
-}
+  );
+};
 
 export default function Onboarding() {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [name, setName] = useState('')
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [name, setName] = useState("");
+  const [uid, setUserId] = useState("");
 
   const onConinue = useCallback(async () => {
     if (activeIndex < 3) {
-      setActiveIndex((prev) => (prev + 1) % 4)
+      setActiveIndex((prev) => (prev + 1) % 4);
     }
-    if (name === '') return
+    if (name === "" || uid === "") return;
 
-    const result = await db.insert(ownerTable).values({ id: 'owner', name }).execute().catch(console.error)
-    console.log(result)
-    router.navigate('/')
-  }, [db, name, activeIndex])
-  const insets = useSafeAreaInsets()
-  const keyboard = useAnimatedKeyboard()
+    const result = await db
+      .insert(ownerTable)
+      .values({ id: "owner", name, omiUserId: uid })
+      .execute()
+      .catch(console.error);
+    console.log(result);
+    router.navigate("/");
+  }, [db, name, uid, activeIndex]);
+  const insets = useSafeAreaInsets();
+  const keyboard = useAnimatedKeyboard();
 
   const onSwipeEnd = useCallback(
     (event: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => {
       setActiveIndex((prev) => {
         if (event.velocityY > 0) {
-          return Math.max(0, prev - 1)
+          return Math.max(0, prev - 1);
         } else {
-          return Math.min(3, prev + 1)
+          return Math.min(3, prev + 1);
         }
-      })
+      });
     },
-    [],
-  )
+    []
+  );
 
   const swipeGesture = Gesture.Pan()
     .activeOffsetY([-10, 10])
     .onEnd((event) => {
-      runOnJS(onSwipeEnd)(event)
-    })
+      runOnJS(onSwipeEnd)(event);
+    });
 
   const style = useAnimatedStyle(() => {
     return {
       paddingBottom: keyboard.height.value - insets.bottom + 8,
-    }
-  })
+    };
+  });
 
   return (
     <GestureDetector gesture={swipeGesture}>
@@ -143,7 +154,7 @@ export default function Onboarding() {
           style,
         ]}
       >
-        <StatusBar style={'dark'} />
+        <StatusBar style={"dark"} />
         <Slide
           layout="linear"
           expanded={activeIndex === 0}
@@ -151,20 +162,28 @@ export default function Onboarding() {
           paddingTop={insets.top}
           onPress={() => setActiveIndex(0)}
         >
-          <Box alignItems="center" justifyContent="center" flex={1} paddingHorizontal={4} gap={6}>
+          <Box
+            alignItems="center"
+            justifyContent="center"
+            flex={1}
+            paddingHorizontal={4}
+            gap={6}
+          >
             <Image
-              source={require('@/assets/illustrations/globus.png')}
+              source={require("@/assets/illustrations/globus.png")}
               style={{
-                width: '60%',
+                width: "60%",
                 aspectRatio: 1,
               }}
             />
             <Box gap={3}>
               <Text variant="h3" textAlign="center">
-                Build relationships that matter.
+                Safety first.
               </Text>
               <Text variant="body" textAlign="center">
-                Transform your networking experience with real-time AI assistance that remembers key details. suggests personalized follow-ups, and ensures you never lose track of important connections.
+                From stopping harassment to honoring verbal agreements, Network
+                State empowers you with verifiable, privacy-preserving tools for
+                a safer world.
               </Text>
             </Box>
           </Box>
@@ -175,11 +194,17 @@ export default function Onboarding() {
           title="Privacy First"
           onPress={() => setActiveIndex(1)}
         >
-          <Box alignItems="center" justifyContent="center" flex={1} paddingHorizontal={4} gap={6}>
+          <Box
+            alignItems="center"
+            justifyContent="center"
+            flex={1}
+            paddingHorizontal={4}
+            gap={6}
+          >
             <Image
-              source={require('@/assets/illustrations/tunnel.png')}
+              source={require("@/assets/illustrations/tunnel.png")}
               style={{
-                width: '60%',
+                width: "60%",
                 aspectRatio: 1,
               }}
             />
@@ -188,7 +213,8 @@ export default function Onboarding() {
                 You own your data.
               </Text>
               <Text variant="body" textAlign="center">
-                Private conversation are the most sacred, thus we ensure that your data is never shared with third parties.
+                Resolve conflicts with cryptographic evidence and immutable
+                blockchain records make disputes fair, fast, and secure.
               </Text>
             </Box>
           </Box>
@@ -196,29 +222,36 @@ export default function Onboarding() {
         <Slide
           layout="linear"
           expanded={activeIndex === 2}
-          title="AI enabled"
+          title="AI powered"
           onPress={() => setActiveIndex(2)}
         >
-          <Box alignItems="center" justifyContent="center" flex={1} paddingHorizontal={4} gap={6}>
+          <Box
+            alignItems="center"
+            justifyContent="center"
+            flex={1}
+            paddingHorizontal={4}
+            gap={6}
+          >
             <Image
-              source={require('@/assets/illustrations/ai.png')}
+              source={require("@/assets/illustrations/ai.png")}
               style={{
-                width: '60%',
+                width: "60%",
                 aspectRatio: 1,
               }}
             />
             <Box gap={3}>
               <Text variant="h3" textAlign="center">
-                AI powered insights.
+                AI powered.
               </Text>
               <Text variant="body" textAlign="center">
-                Third value proposition
+                Our AI assistant helps you accurately analyze and extract the key
+                points from your conversations.
               </Text>
             </Box>
           </Box>
         </Slide>
         <Slide
-          layout={'none'}
+          layout={"none"}
           expanded={activeIndex === 3}
           title="LFG!"
           onPress={() => setActiveIndex(3)}
@@ -235,6 +268,14 @@ export default function Onboarding() {
               value={name}
               placeholder="Name"
             />
+            <Input
+              variant="onboarding"
+              paddingHorizontal={3}
+              placeholderTextColor="#5f5f5f"
+              onChangeText={setUserId}
+              value={uid}
+              placeholder="User ID"
+            />
           </Box>
         </Slide>
         <Button variant="primary" onPress={onConinue}>
@@ -242,5 +283,5 @@ export default function Onboarding() {
         </Button>
       </AnimatedBox>
     </GestureDetector>
-  )
+  );
 }
