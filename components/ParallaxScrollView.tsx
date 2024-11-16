@@ -1,5 +1,5 @@
 import type { PropsWithChildren, ReactElement } from 'react';
-import { StyleSheet, useColorScheme } from 'react-native';
+import { ColorValue, StyleSheet, useColorScheme } from 'react-native';
 import Animated, {
   interpolate,
   useAnimatedRef,
@@ -7,14 +7,14 @@ import Animated, {
   useScrollViewOffset,
 } from 'react-native-reanimated';
 
-import { useBottomTabOverflow } from '@/components/ui/TabBarBackground';
-import { Box } from './ui/box';
+import { AnimatedBox, Box } from './ui/box';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const HEADER_HEIGHT = 250;
 
 type Props = PropsWithChildren<{
   headerImage: ReactElement;
-  headerBackgroundColor: { dark: string; light: string };
+  headerBackgroundColor: ColorValue;
 }>;
 
 export default function ParallaxScrollView({
@@ -22,10 +22,8 @@ export default function ParallaxScrollView({
   headerImage,
   headerBackgroundColor,
 }: Props) {
-  const colorScheme = useColorScheme() ?? 'light';
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollViewOffset(scrollRef);
-  const bottom = useBottomTabOverflow();
   const headerAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -42,7 +40,7 @@ export default function ParallaxScrollView({
       ],
     };
   });
-
+  const { bottom } = useSafeAreaInsets()
   return (
     <Box style={styles.container}>
       <Animated.ScrollView
@@ -50,14 +48,16 @@ export default function ParallaxScrollView({
         scrollEventThrottle={16}
         scrollIndicatorInsets={{ bottom }}
         contentContainerStyle={{ paddingBottom: bottom }}>
-        <Animated.View
+        <AnimatedBox
           style={[
+            {
+              backgroundColor: headerBackgroundColor,
+            },
             styles.header,
-            { backgroundColor: headerBackgroundColor[colorScheme] },
             headerAnimatedStyle,
           ]}>
           {headerImage}
-        </Animated.View>
+        </AnimatedBox>
         <Box style={styles.content}>{children}</Box>
       </Animated.ScrollView>
     </Box>

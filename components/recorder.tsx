@@ -10,8 +10,11 @@ import {
   withTiming,
 } from "react-native-reanimated";
 import { Icon } from "./ui/icons";
+import { db } from "@/db/drizzle";
+import { contactTable } from "@/db/schema";
+import { stringToHslColor } from "@/lib/colors";
 
-export default function AudoRecorder() {
+export default function AudoRecorder({ onDismiss }: { onDismiss: () => void }) {
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
 
   useEffect(() => {
@@ -30,8 +33,20 @@ export default function AudoRecorder() {
     };
   }, []);
 
+
   const onFinishRecording = async () => {
     await audioRecorder.stop();
+    await db
+      .insert(contactTable)
+      .values({
+        name: 'New Contact',
+        color: stringToHslColor('New Contact'),
+        description: 'AI description',
+        headline: 'Super headline',
+      })
+      .execute()
+      .catch(console.error)
+    onDismiss();
   };
 
   const scale =

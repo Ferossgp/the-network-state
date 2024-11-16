@@ -15,7 +15,7 @@ export const ContactListItem: React.FC<{
       <Pressable
         onPress={() =>
           router.navigate({
-            pathname: '/contact/[id]',
+            pathname: '/contacts/contact/[id]',
             params: { id: contact.id },
           })
         }

@@ -33,19 +33,21 @@ export default function HomeScreen() {
   )
 
   return (
-    <Box>
+    <Box flex={1}>
       <Box height={insets.top} />
       <Box paddingHorizontal={2} gap={2} flexDirection="row" alignItems="center">
         <Text variant="title" color="foreground-dark">Network 📒</Text>
       </Box>
-      <AnimatedFlatList
-        data={contacts}
-        renderItem={renderItem}
-        ItemSeparatorComponent={ItemSeparatorComponent}
-        ListFooterComponent={ListFooterComponent}
-        estimatedItemSize={110}
-        keyExtractor={keyExtractor}
-      />
+      <Box flex={1} padding={3}>
+        <AnimatedFlatList
+          data={contacts}
+          renderItem={renderItem}
+          ItemSeparatorComponent={ItemSeparatorComponent}
+          ListFooterComponent={ListFooterComponent}
+          estimatedItemSize={93}
+          keyExtractor={keyExtractor}
+        />
+      </Box>
     </Box>
   );
 }

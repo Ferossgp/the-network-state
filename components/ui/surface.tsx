@@ -31,7 +31,7 @@ export const WithBlurEffect: React.FC<
   React.PropsWithChildren<{
     tint?: BlurTint
   }>
-> = ({ children, tint = 'systemUltraThinMaterialDark' }) => {
+> = ({ children, tint = 'systemUltraThinMaterialLight' }) => {
   return <React.Fragment>
     <BlurView
       style={StyleSheet.absoluteFill}

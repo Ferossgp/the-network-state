@@ -2,7 +2,7 @@ import type { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import type React from 'react'
 import { router } from 'expo-router'
 import { Pressable } from 'react-native'
-import Animated, { FadeIn, FadeInRight, FadeOutRight } from 'react-native-reanimated'
+import { FadeIn, FadeInRight, FadeOutRight } from 'react-native-reanimated'
 import { buttonSize } from '@/theme'
 import { Button } from './ui/button'
 import { AnimatedBox, Box } from './ui/box'
@@ -39,7 +39,7 @@ const AddContact = () => {
         <BottomSheetView>
           <Box padding={3}>
             <Text variant="title" color="foreground-dark">Add Contact</Text>
-            <Recorder />
+            <Recorder onDismiss={() => setOpen(false)} />
           </Box>
           <Box height={insets.bottom} />
         </BottomSheetView>

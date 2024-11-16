@@ -51,6 +51,8 @@ const theme = createTheme({
     'muted-dark': colorsDark.muted,
     'muted-light': colorsLight.muted,
 
+    'surface-light': '#FFFFFF',
+
     card: colorsLight.card,
     overlay: colorsLight.overlay,
     shadow: '#000000',
