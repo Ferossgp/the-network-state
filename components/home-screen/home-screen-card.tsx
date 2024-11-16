@@ -57,6 +57,7 @@ export const HomeListItem = ({
       runOnJS(onRight)()
     })
   }
+
   const onPressLeft = () => {
     translateX.value = withTiming(-500, {
       duration: 500,
