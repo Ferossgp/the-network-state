@@ -7,22 +7,18 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { useLiveQuery } from 'drizzle-orm/expo-sqlite';
-import { db } from '@/db/drizzle';
 import { ownerTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { useLiveQuery } from '@/db/use-live-query';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
-  const { data } = useLiveQuery(
+  const { data } = useLiveQuery((db) =>
     db.select().from(ownerTable).where(eq(ownerTable.id, 'owner'))
-  )
+  );
 
-  console.log(data)
-
-  const owner = data?.[0];
-  if (owner == null) {
+  if (data != null && data[0] == null) {
     return <Redirect href="/onboarding" />
   }
 
