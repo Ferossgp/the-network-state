@@ -25,3 +25,11 @@ export const notesTable = sqliteTable('notes', {
   contactId: int().references(() => contactTable.id),
   createdAt: text().default(sql`(CURRENT_TIMESTAMP)`),
 })
+
+export const recordingsTable = sqliteTable('recordings', {
+  id: int().primaryKey({ autoIncrement: true }),
+  name: text().notNull(),
+  description: text().notNull(),
+  color: text().notNull().$type<ColorValue>(),
+  createdAt: text().default(sql`(CURRENT_TIMESTAMP)`),
+})

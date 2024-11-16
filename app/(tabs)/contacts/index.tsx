@@ -6,8 +6,8 @@ import Animated from 'react-native-reanimated';
 import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import { Contact, contactTable } from '@/db/schema';
 import { useCallback } from 'react';
-import { ContactListItem } from '@/components/home-screen/contact-list-item';
 import { useLiveQuery } from '@/db/use-live-query';
+import { ContactListItem } from '@/components/contacts-screen/contact-list-item';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlashList)
 

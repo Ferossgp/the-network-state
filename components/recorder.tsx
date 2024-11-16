@@ -11,7 +11,7 @@ import {
 } from "react-native-reanimated";
 import { Icon } from "./ui/icons";
 import { db } from "@/db/drizzle";
-import { contactTable } from "@/db/schema";
+import { contactTable, recordingsTable } from "@/db/schema";
 import { stringToHslColor } from "@/lib/colors";
 
 export default function AudoRecorder({ onDismiss }: { onDismiss: () => void }) {
@@ -33,24 +33,22 @@ export default function AudoRecorder({ onDismiss }: { onDismiss: () => void }) {
     };
   }, []);
 
-
   const onFinishRecording = async () => {
     await audioRecorder.stop();
+
     await db
-      .insert(contactTable)
+      .insert(recordingsTable)
       .values({
-        name: 'New Contact',
-        color: stringToHslColor('New Contact'),
-        description: 'AI description',
-        headline: 'Super headline',
+        name: "New Recording",
+        color: stringToHslColor("New Recording"),
+        description: "AI description",
       })
       .execute()
-      .catch(console.error)
+      .catch(console.error);
     onDismiss();
   };
 
-  const scale =
-    useSharedValue(1);
+  const scale = useSharedValue(1);
 
   useEffect(() => {
     scale.value = withRepeat(withTiming(1.5, { duration: 500 }), -1, true);

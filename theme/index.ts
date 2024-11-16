@@ -149,6 +149,17 @@ const theme = createTheme({
       alignItems: 'center',
       justifyContent: 'center',
     },
+    'card-action': {
+      height: buttonSize.small,
+      paddingHorizontal: 0,
+      paddingLeft: 4,
+      paddingRight: 3,
+      backgroundColor: 'positive',
+      borderRadius: 'lg',
+      justifyContent: 'center',
+      alignItems: 'center',
+      color: 'positive-foreground',
+    }
   },
   textVariants: {
     header: {
